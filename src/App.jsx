@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -10,13 +10,22 @@ function App() {
   //set coordinates
   //call weather api and get weather
   //render current weather
-  const [location, setLocation] = useState([]);
+  const [location, setLocation] = useState(null);
   const [input, setInput] = useState("");
   const [weather, setWeather] = useState(null);
+  const isRendered = useRef(false);
 
   const apiKey = "7f5ac72c104616aa33dd624b9f2e2a45";
-  const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=3&appid=${apiKey}`;
-  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${apiKey}`;
+  const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=1&appid=${apiKey}`;
+
+  useEffect(() => {
+    if (isRendered.current) {
+      getWeather();
+      return;
+    }
+
+    isRendered.current = true;
+  }, [location]);
 
   const getLocation = async () => {
     try {
@@ -31,11 +40,12 @@ function App() {
 
   const getWeather = async () => {
     try {
+      console.log(location);
       const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${location.lat}&lon=${location.lon}&appid=${apiKey}`;
       const response = await fetch(weatherUrl);
       const data = await response.json();
+      console.log("inside getWeather", data);
       setWeather(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
