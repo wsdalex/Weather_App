@@ -15,8 +15,9 @@ function App() {
   const [weather, setWeather] = useState(null);
   const isRendered = useRef(false);
 
-  const apiKey = "7f5ac72c104616aa33dd624b9f2e2a45";
-  const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=1&appid=${apiKey}`;
+  const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=1&appid=${
+    import.meta.env.VITE_APP_WEATHER_API_KEY
+  }`;
 
   useEffect(() => {
     if (isRendered.current) {
